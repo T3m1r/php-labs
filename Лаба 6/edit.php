@@ -9,10 +9,10 @@ $errors=[];
 if($_SERVER['REQUEST_METHOD']==='POST'){
  foreach(['full_name','birth_date','group_name','parent_phone','enrollment_date'] as $field)$child[$field]=trim((string)($_POST[$field]??''));
  if(mb_strlen($child['full_name'],'UTF-8')<3||mb_strlen($child['full_name'],'UTF-8')>120)$errors[]='ФИО должно содержать от 3 до 120 символов.';
- if(!preg_match('/^\\d{4}-\\d{2}-\\d{2}$/',$child['birth_date'])||strtotime($child['birth_date'])===false)$errors[]='Укажите корректную дату рождения.';
+ if(!preg_match('/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/',$child['birth_date'])||strtotime($child['birth_date'])===false)$errors[]='Укажите корректную дату рождения.';
  if($child['group_name']===''||mb_strlen($child['group_name'],'UTF-8')>30)$errors[]='Укажите группу (до 30 символов).';
  if($child['parent_phone']===''||mb_strlen($child['parent_phone'],'UTF-8')>30)$errors[]='Укажите телефон родителя.';
- if(!preg_match('/^\\d{4}-\\d{2}-\\d{2}$/',$child['enrollment_date'])||strtotime($child['enrollment_date'])===false)$errors[]='Укажите корректную дату зачисления.';
+ if(!preg_match('/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/',$child['enrollment_date'])||strtotime($child['enrollment_date'])===false)$errors[]='Укажите корректную дату зачисления.';
  if(!$errors){$update=$pdo->prepare('UPDATE children SET full_name=:n,birth_date=:b,group_name=:g,parent_phone=:p,enrollment_date=:e WHERE id=:id');$update->execute([':n'=>$child['full_name'],':b'=>$child['birth_date'],':g'=>$child['group_name'],':p'=>$child['parent_phone'],':e'=>$child['enrollment_date'],':id'=>$id]);header('Location: index.php?updated=1');exit;}
 }
 ?>
