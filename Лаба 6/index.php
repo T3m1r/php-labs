@@ -8,10 +8,10 @@ if(!in_array($sort,$allowedSorts,true))$sort='full_name';$direction=strtoupper((
 if($_SERVER['REQUEST_METHOD']==='POST'){
  $fullName=trim((string)($_POST['full_name']??''));$birthDate=trim((string)($_POST['birth_date']??''));$groupName=trim((string)($_POST['group_name']??''));$parentPhone=trim((string)($_POST['parent_phone']??''));$enrollmentDate=trim((string)($_POST['enrollment_date']??''));
  if(mb_strlen($fullName,'UTF-8')<3||mb_strlen($fullName,'UTF-8')>120)$errors[]='ФИО должно содержать от 3 до 120 символов.';
- if(!preg_match('/^\\d{4}-\\d{2}-\\d{2}$/',$birthDate)||strtotime($birthDate)===false)$errors[]='Укажите корректную дату рождения.';
+ if(!preg_match('/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/',$birthDate)||strtotime($birthDate)===false)$errors[]='Укажите корректную дату рождения.';
  if($groupName===''||mb_strlen($groupName,'UTF-8')>30)$errors[]='Укажите группу (до 30 символов).';
  if($parentPhone===''||mb_strlen($parentPhone,'UTF-8')>30)$errors[]='Укажите телефон родителя (до 30 символов).';
- if(!preg_match('/^\\d{4}-\\d{2}-\\d{2}$/',$enrollmentDate)||strtotime($enrollmentDate)===false)$errors[]='Укажите корректную дату зачисления.';
+ if(!preg_match('/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/',$enrollmentDate)||strtotime($enrollmentDate)===false)$errors[]='Укажите корректную дату зачисления.';
  if(!$errors){$stmt=$pdo->prepare('INSERT INTO children (full_name,birth_date,group_name,parent_phone,enrollment_date) VALUES (:n,:b,:g,:p,:e)');$stmt->execute([':n'=>$fullName,':b'=>$birthDate,':g'=>$groupName,':p'=>$parentPhone,':e'=>$enrollmentDate]);header('Location: index.php?added=1');exit;}
 }
 $children=$pdo->query("SELECT id,full_name,birth_date,group_name,parent_phone,enrollment_date FROM children ORDER BY {$sort} {$direction}")->fetchAll();
